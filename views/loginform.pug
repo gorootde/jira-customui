@@ -1,0 +1,14 @@
+if !user
+  
+  form.navbar-form.navbar-right(role="search" method='POST' action="/auth")
+    .form-group
+      input.form-control(type='text' id='user' placeholder='Username' name='user')
+    .form-group
+      input.form-control(type='password' id='password' placeholder='password' name='password')
+    button.btn.btn-default(type='submit') Log in 
+    
+else
+  
+  form.navbar-form.navbar-right(role="search" method='GET' action="/auth/logout")
+    button.btn.btn-default(type='submit') Logout 
+  p.navbar-text.navbar-right Signed in as #{user.name}.

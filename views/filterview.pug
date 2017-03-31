@@ -1,0 +1,42 @@
+extends layout
+  
+  
+  
+
+block content
+  script(src="/javascripts/filterview.js")
+  
+    
+    
+
+  
+  h1 Results for #{filter.name}
+  table.table#issuelist(data-fields=fields)
+    thead
+      tr
+        for field in fields
+          th #{field.label}
+    tbody  
+      for issue in data.issues
+        tr(data-issue=issue)
+          each field in fields
+              - var fieldcontent=issue.fields[field.value]
+              case field.value
+                when "issuekey"
+                  td.details-control
+                    a #{issue.key}
+                when "issuetype"
+                  td
+                    img(src=fieldcontent.iconUrl)
+                    span #{fieldcontent.name}
+                when "assignee"
+                  td 
+                    img(src=fieldcontent.avatarUrls['48x48'], width="25px", height="25px")
+                    span #{fieldcontent.displayName}
+                when "fixVersions"
+                  td
+                    each version in fieldcontent
+                      span.label.label-primary #{version.name}
+                default
+                  td #{fieldcontent}
+        

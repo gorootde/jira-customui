@@ -1,0 +1,12 @@
+li.dropdown
+  a.dropdown-toggle(data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false") Issues
+    span.caret
+  ul.dropdown-menu#jira-filters
+  script.
+    $(document).ready(function() {
+      var filters = $.getJSON("/api/jira/filter/favourite", function(data) {
+          $(data).each(function(index, value) {
+              $('#jira-filters').append('<li><a href="/api/jira/filterresults/'+value.id+'">'+value.name+'</a></li>');
+          });
+      });
+    });

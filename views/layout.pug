@@ -1,0 +1,24 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/datatables-1.10.13/datatables.css')
+    script(src='/js/jquery.min.js')
+    script(src='/js/bootstrap.min.js')
+    script(src='/js/jquery.datatables.js')
+    script(src='/js/datatables.colReorder.js')
+    script(src='/js/datatables.fixedHeader.js')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    nav.navbar.navbar-default
+      .container-fluid
+          .navbar-header
+            a.navbar-brand(href="/") #{title}
+          .collapse.navbar-collapse
+            if user
+              include menuloggedin
+            include loginform
+      
+
+    block content
