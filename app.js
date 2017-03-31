@@ -44,9 +44,15 @@ app.use(logger('dev'));
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
 app.use('/js', express.static(__dirname + '/node_modules/jquery/dist')); // redirect JS jQuery
 app.use('/js', express.static(__dirname + '/node_modules/datatables.net/js'));
+app.use('/js', express.static(__dirname + '/node_modules/datatables.net-bs/js'));
 app.use('/js', express.static(__dirname + '/node_modules/datatables.net-colreorder/js'));
 app.use('/js', express.static(__dirname + '/node_modules/datatables.net-fixedheader/js'));
+app.use('/css', express.static(__dirname + '/node_modules/datatables.net-bs/css'));
+
+app.use('/css', express.static(__dirname + '/node_modules/datatables.net-colreorder-bs/css'));
+app.use('/css', express.static(__dirname + '/node_modules/datatables.net-fixedheader-bs/css'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
+app.use('/fonts', express.static(__dirname + '/node_modules/bootstrap/dist/fonts')); // redirect CSS bootstrap
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false

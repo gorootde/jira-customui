@@ -11,6 +11,12 @@ Think of _JIRACU_ as some sort of firewall, that exposes only the data (and func
 - No additional services needed: _JIRACU_ doesn't require the installation of any additional services like databases etc. Just start with `npm start` and you are ready to go
 
 ## Configuration
+### Inital setup
+
+1. Create certificate
+2. Create JIRA Application link
+3. Run JIRACU!
+
 ### Users
 
 You need to add your users as you would normally do (in JIRA). The credentials required to authenticate in _JIRACU_ are identical to those you use to login to your JIRA instance.
