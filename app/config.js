@@ -6,7 +6,7 @@ var config={
   consumerSecret:fs.readFileSync('keys/oauth.pem').toString(),
   consumerKey: "mysecretkey",
   jira:{
-    baseurl:"http://localhost:8080/"
+    baseurl:"http://localhost:8080/jira"
   }
 };
 

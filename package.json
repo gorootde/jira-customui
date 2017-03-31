@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "debug": "DEBUG=* nodemon -e js,pug app.js"
+    "debug": "DEBUG=* nodemon -e js,pug -i amps-standalone-jira-LATEST app.js",
+    "jira": "atlas-run-standalone --http-port 8080 --product jira"
   },
   "dependencies": {
     "datatables.net":"~1.10.13",
