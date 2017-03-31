@@ -1,7 +1,7 @@
 var fs = require('fs');
 
 var config={
-  apptitle:"My fancy prototype",
+  apptitle:"JIRA Custom UI",
   oauthcallbackurl:"http://localhost:3000/auth/atlassian-oauth/callback",
   consumerSecret:fs.readFileSync('keys/oauth.pem').toString(),
   consumerKey: "mysecretkey",
