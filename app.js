@@ -18,21 +18,7 @@ var CredentialCache = require('./app/models/credentialcache');
 
 var app = express();
 
-passport.serializeUser(function(user, done) {
-    done(null, user.userid);
-});
 
-passport.deserializeUser(function(username, done) {
-    CredentialCache.getEntry(username, function(user) {
-        if (user) {
-            done(null, user);
-        } else {
-            done(new Error('User ' + username + ' not found in database'), null);
-        }
-
-    });
-
-});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

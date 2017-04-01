@@ -2,60 +2,91 @@ var Config = require('../app/config');
 var request = require('request');
 var debug = require('debug')('jiratools');
 
-var JiraTools={}
-JiraTools.performJiraCall=function(token, tokenSecret, url, callback, opts) {
-    var jirareq = {
-        url: Config.jira.baseurl + url,
-        oauth: {
-            consumer_key: Config.consumerKey,
-            private_key: Config.consumerSecret,
-            token: token,
-            token_secret: tokenSecret,
-            signature_method: "RSA-SHA1"
+
+
+function JIRA(baseurl, user) {
+    var self = this;
+    self.token = user.token;
+    self.tokenSecret = user.tokenSecret;
+    self.baseurl = baseurl;
+
+    self.performJiraCall=function(url, callback, opts) {
+        var jirareq = {
+            url: baseurl + url,
+            oauth: {
+                consumer_key: Config.consumerKey,
+                private_key: Config.consumerSecret,
+                token: self.token,
+                token_secret: self.tokenSecret,
+                signature_method: Config.signatureMethod
+            }
+        };
+        if (opts) {
+            jirareq = Object.assign(jirareq, opts);
         }
-    };
-    if (opts) {
-        jirareq = Object.assign(jirareq, opts);
+        debug("Requesting %o ", jirareq);
+        request.get(jirareq, callback);
     }
-    debug("Requesting %o ", jirareq);
-    request.get(jirareq, callback);
+
+
+
+    self.getAllowedFilters = function(callback) {
+        self.performJiraCall('/rest/api/2/filter/favourite', function(error, response, body) {
+            debug("statuuus %o", error);
+            var parsedBody = JSON.parse(body);
+            var filters = [];
+            for (var index in parsedBody) {
+                var filter = parsedBody[index];
+                filters.push(new Filter(self,filter.id, filter.name, filter.jql));
+            }
+            callback(filters);
+        });
+    }
 }
 
-JiraTools.getAllowedColumns=function(token, tokenSecret, filterId, callback) {
-    performJiraCall(token, tokenSecret, '/rest/api/2/filter/' + filterId + '/columns', function(error, response, body) {
-        if (response.statusCode === 404) {
-            //Filter does not have any defined columns
-            callback([]);
-        } else {
-            callback(JSON.parse(body));
-        }
-    });
-}
+function Filter(jira,id, name, jql) {
+    var self = this;
+    self.jira=jira;
+    self.id = id;
+    self.name = name;
+    self.jql = jql;
 
-JiraTools.getAllowedFilters=function(token, tokenSecret, callback) {
-    performJiraCall(token, tokenSecret, '/rest/api/2/filter/favourite', function(error, response, body) {
-        debug("statuuus %o", error);
-        var parsedBody = JSON.parse(body);
-        var filters = [];
-        for (var index in parsedBody) {
-            var filter = parsedBody[index];
-            filters.push(filter);
-        }
-        callback(filters);
-    });
-}
+    function getColumns(callback) {
+        jira.performJiraCall('/rest/api/2/filter/' + self.id + '/columns', function(error, response, body) {
+            if (response.statusCode === 404) {
+                //Filter does not have any defined columns
+                callback([]);
+            } else {
+                callback(JSON.parse(body));
+            }
+        });
+    }
 
-/**
- * Determine if an issue is included in the given filter AND the filter is allowed for this user
- */
-JiraTools.isIssueIncluded=function(token, tokenSecret, filterId, issueKey, callback) {
-    getAllowedFilters(req.user.token, req.user.tokenSecret, function(filters) {
-        var filter = filters.filter(function(entry) {
-            return entry.id == req.params.filterid
+    self.getResult = function(maxResults, callback) {
+        getColumns(function(columns) {
+            var fieldlist = columns.map(function(col) {
+                return col.value;
+            }).join();
+
+            var reqobj = {
+                qs: {
+                    jql: self.jql,
+                    maxResults: maxResults,
+                    fields: fieldlist
+                }
+            };
+            jira.performJiraCall('/rest/api/2/search', function(error, response, body) {
+                callback(columns,JSON.parse(body));
+            }, reqobj);
         });
 
-    });
+    }
 }
 
 
-module.exports=JiraTools;
+var JiraTools = {
+    JIRA: JIRA
+};
+
+
+module.exports = JiraTools;

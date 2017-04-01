@@ -5,6 +5,7 @@ var config={
   oauthcallbackurl:"http://localhost:3000/auth/atlassian-oauth/callback",
   consumerSecret:fs.readFileSync('keys/oauth.pem').toString(),
   consumerKey: "mysecretkey",
+  signatureMethod: "RSA-SHA1",
   jira:{
     baseurl:"http://localhost:8080/jira"
   }

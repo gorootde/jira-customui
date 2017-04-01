@@ -6,6 +6,21 @@ var CredentialCache = require('../app/models/credentialcache');
 var Config = require('../app/config');
 
 
+passport.serializeUser(function(user, done) {
+    done(null,user.userid);
+});
+
+passport.deserializeUser(function(username, done) {
+    CredentialCache.getEntry(username, function(user) {
+        if (user) {
+            done(null, user);
+        } else {
+            done(new Error('User ' + username + ' not found in database'), null);
+        }
+    });
+
+});
+
 passport.use(new AtlassianOAuthStrategy({
             applicationURL: Config.jira.baseurl,
             callbackURL: Config.oauthcallbackurl,
@@ -24,18 +39,12 @@ passport.use(new AtlassianOAuthStrategy({
 
 /* GET users listing. */
 router.post('/', passport.authenticate('atlassian-oauth', {
-    successRedirect: '/api/jira/loadcredentials',
+    successRedirect: '/',
     failureRedirect: '/',
     failureFlash: true
 }));
 
 
-
-// GET /auth/atlassian-oauth
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  The first step in Atlassian authentication will involve
-//   redirecting the user to the atlassian Oauth authorisation page.  After authorization, the Atlassian app will
-//   redirect the user back to this application at /auth/atlassian-oauth
 router.get('/atlassian-oauth',
     passport.authenticate('atlassian-oauth'),
     function(req, res) {
@@ -43,11 +52,7 @@ router.get('/atlassian-oauth',
         // function will not be called.
     });
 
-// GET /auth/atlassian-oauth/callback
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  If authentication fails, the user will be redirected back to the
-//   login page.  Otherwise, the primary route function function will be called,
-//   which, in this example, will redirect the user to the home page.
+
 router.get('/atlassian-oauth/callback',
     passport.authenticate('atlassian-oauth', {
         failureRedirect: '/login'
