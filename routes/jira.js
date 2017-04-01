@@ -40,29 +40,31 @@ router.get('/filter/favourite', ensureAuthenticated, function(req, res, next) {
 
 
 router.get('/filterresults/:filterid/issue/:issuekey', ensureAuthenticated, function(req, res, next) {
-  var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
-  jira.getFilter(req.params.filterid,function(filter) {
-      if (filter) {
-        filter.getIssue(req.params.issuekey,function(fields,issue){
-          if(issue){
-            res.render('issuedetails', {
-                user: req.user,
-                data: issue,
-                fields: fields
+    var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
+    jira.getFilter(req.params.filterid, function(filter) {
+        if (filter) {
+            filter.getIssue(req.params.issuekey, function(fields, issue) {
+                if (issue) {
+                    res.render('issuedetails', {
+                        title: Config.apptitle,
+                        user: req.user,
+                        data: issue,
+                        fields: fields
+                    });
+                }
             });
-          }
-        });
-      }
+        }
     });
 });
 
 router.get('/filterresults/:filterid', ensureAuthenticated, function(req, res, next) {
     var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
-    jira.getFilter(req.params.filterid,function(filter) {
+    jira.getFilter(req.params.filterid, function(filter) {
         if (filter) {
-            filter.getResult(1000,function(fields,data) {
+            filter.getResult(1000, function(fields, data) {
                 if (req.accepts('html')) {
                     res.render('filterview', {
+                        title: Config.apptitle,
                         user: req.user,
                         filter: filter,
                         fields: fields,
