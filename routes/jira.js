@@ -1,3 +1,19 @@
+//
+//     Copyright (C) 2017  Michael Kolb
+//
+//     This program is free software: you can redistribute it and/or modify
+//     it under the terms of the GNU General Public License as published by
+//     the Free Software Foundation, either version 3 of the License, or
+//     (at your option) any later version.
+//
+//     This program is distributed in the hope that it will be useful,
+//     but WITHOUT ANY WARRANTY; without even the implied warranty of
+//     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//     GNU General Public License for more details.
+//
+//     You should have received a copy of the GNU General Public License
+//     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 var express = require('express');
 var router = express.Router();
 var Config = require('../app/config');
@@ -24,21 +40,26 @@ router.get('/filter/favourite', ensureAuthenticated, function(req, res, next) {
 
 
 router.get('/filterresults/:filterid/issue/:issuekey', ensureAuthenticated, function(req, res, next) {
-    res.render('issuedetails', {
-        user: req.user,
-        data: req.query.data,
-        fields: req.query.fields
+  var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
+  jira.getFilter(req.params.filterid,function(filter) {
+      if (filter) {
+        filter.getIssue(req.params.issuekey,function(fields,issue){
+          if(issue){
+            res.render('issuedetails', {
+                user: req.user,
+                data: issue,
+                fields: fields
+            });
+          }
+        });
+      }
     });
 });
 
 router.get('/filterresults/:filterid', ensureAuthenticated, function(req, res, next) {
     var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
-    jira.getAllowedFilters(function(filters) {
-        var filter = filters.filter(function(entry) {
-            return entry.id == req.params.filterid
-        });
-        if (filter.length > 0) {
-            filter = filter[0];
+    jira.getFilter(req.params.filterid,function(filter) {
+        if (filter) {
             filter.getResult(1000,function(fields,data) {
                 if (req.accepts('html')) {
                     res.render('filterview', {

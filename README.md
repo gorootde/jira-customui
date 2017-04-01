@@ -23,3 +23,17 @@ You need to add your users as you would normally do (in JIRA). The credentials r
 
 ### Issue views
 A _JIRACU_ user is only able to see issues that where explicitly shared with him. Issues are shared by creating a filter, defining the visible columns within it, and finally sharing the filter with your external user. The is only able to view issues that are contained in one of the filter results shared with him. Furthermore only the fields you defined in your filter (as columns) will be displayed.
+
+## License
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
