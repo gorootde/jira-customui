@@ -85,4 +85,16 @@ router.get('/filterresults/:filterid', ensureAuthenticated, function(req, res, n
 });
 
 
+router.get('/createissue', ensureAuthenticated, function(req, res, next) {
+    var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
+    jira.getCreateMetaData(function(data) {
+        res.render('createissue', {
+            title: Config.apptitle,
+            user: req.user,
+            data: data
+        });
+    });
+
+});
+
 module.exports = router

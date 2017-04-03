@@ -44,6 +44,17 @@ function JIRA(baseurl, user) {
         request.get(jirareq, callback);
     }
 
+    self.getCreateMetaData = function(callback) {
+        var reqobj = {
+            qs: {
+                expand: "project.issuetypes.fields"
+            }
+        };
+        self.performJiraCall('/rest/api/2/issue/createmeta', function(error, response, body) {
+          var parsedBody=JSON.parse(body);
+          callback(parsedBody.projects);
+        }, reqobj);
+    }
 
     self.getFilter = function(filterid, callback) {
         self.getAllowedFilters(function(filters) {
@@ -105,15 +116,15 @@ function Filter(jira, id, name, jql) {
         });
     }
     self.getIssue = function(issueKey, callback) {
-      performSearch(1,"key = "+issueKey+" AND ",function(fields,result){
-        var issue=result.issues.length > 0 ? result.issues[0] : null;
-        callback(fields,issue);
-      });
+        performSearch(1, "key = " + issueKey + " AND ", function(fields, result) {
+            var issue = result.issues.length > 0 ? result.issues[0] : null;
+            callback(fields, issue);
+        });
     }
 
 
     self.getResult = function(maxResults, callback) {
-        performSearch(1000,null,callback);
+        performSearch(1000, null, callback);
     }
 }
 

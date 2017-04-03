@@ -52,6 +52,10 @@ app.use('/js', express.static(__dirname + '/node_modules/datatables.net/js'));
 app.use('/js', express.static(__dirname + '/node_modules/datatables.net-bs/js'));
 app.use('/js', express.static(__dirname + '/node_modules/datatables.net-colreorder/js'));
 app.use('/js', express.static(__dirname + '/node_modules/datatables.net-fixedheader/js'));
+
+app.use('/js', express.static(__dirname + '/node_modules/bootstrap-select/dist/js'));
+app.use('/css', express.static(__dirname + '/node_modules/bootstrap-select/dist/css'));
+
 app.use('/css', express.static(__dirname + '/node_modules/datatables.net-bs/css'));
 
 app.use('/css', express.static(__dirname + '/node_modules/datatables.net-colreorder-bs/css'));
