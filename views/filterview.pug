@@ -23,11 +23,18 @@ block content
   script(src="/javascripts/filterview.js")
   
   h1 Results for #{filter.name}
+  a(data-toggle="collapse", data-target="#fieldvisibility") Column visibility
+  div.collapse#fieldvisibility
+    for field in fields
+      div.checkbox
+        label
+          input.toggle-vis(type="checkbox", checked=true,data-column=field.value)
+          | #{field.label}
   table.table#issuelist(data-fields=fields)
     thead
       tr
         for field in fields
-          th #{field.label}
+          th(data-column=field.value) #{field.label}
     tbody  
       for issue in data.issues
         tr(data-issue=issue)

@@ -18,6 +18,13 @@ $(document).ready(function() {
     var table = $('#issuelist').DataTable({
         colReorder: true
     });
+    $('.toggle-vis').change(function(e){
+      e.preventDefault();
+      var colname=$(this).data('column');
+      var column = table.column($('#issuelist th[data-column="'+colname+'"]'));
+      console.log(column);
+      column.visible(!column.visible());
+    });
     $('#issuelist tbody').on('click', 'td.details-control', function() {
         var tr = $(this).closest('tr');
         var row = table.row(tr);
