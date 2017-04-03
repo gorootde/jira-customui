@@ -20,27 +20,20 @@ extends layout
 
 block content
   include fieldutils
-  script.
-    $(document).ready(function(){
-      $('.selectpicker').selectpicker({
-        style: 'btn-info',
-        size: 4
-      });
-      $('.selectpicker.project').change(function(){
-        console.log($(this).val());
-        
-      });
-    });
+  script(src="/javascripts/createissue.js")
+  
       
   h1 Create Issue
   form
-    select.selectpicker.show-tick.project(data-live-search="true")
+    select.selectpicker.show-tick.project#selproject(data-live-search="true")
       for project in data
         option(value=project.key,data-size="8",data-content="<img src=\""+project.avatarUrls['16x16']+"\" width=\"16\" height=\"16\"/> "+project.name) #{project.name}
-    
-//- select.selectpicker  
-//-   for issuetype in data.issuetypes
-//-     option(value=issuetype.id,data-content="<img src=\""+issuetype.iconUrl+"\" width=\"16\" height=\"16\"/> "+issuetype.name) #{issuetype.name}
-//-     
-//- 
+    br
+    select.selectpicker#selissuetype(data-hide-disabled="true")
+      for project in data
+        optgroup(label=project.key)
+        for issuetype in project.issuetypes
+          option.issuetype(disabled,value=issuetype.id,data-projectkey=project.key,data-content="<img src=\""+issuetype.iconUrl+"\" width=\"16\" height=\"16\"/> "+issuetype.name) #{issuetype.name}
+      
+
 
