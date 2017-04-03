@@ -1,0 +1,74 @@
+mixin space()
+  | !{' '}
+  
+  
+mixin duration(seconds)
+    //- calculate (and subtract) whole days
+    -var days = Math.floor(seconds / 86400);
+    -seconds -= days * 86400;
+
+    //- calculate (and subtract) whole hours
+    -var hours = Math.floor(seconds / 3600) % 24;
+    -seconds -= hours * 3600;
+
+    //- calculate (and subtract) whole minutes
+    -var minutes = Math.floor(seconds / 60) % 60;
+    -seconds -= minutes * 60;
+
+    //- what's left is seconds
+    -var seconds = seconds % 60;  // in theory the modulus is not required
+
+    span #{days}d #{hours}h #{minutes}m
+
+mixin date(date)
+  - var date=moment(date,"YYYY-MM-DDTHH:mm:ss.SSSZZ")
+  span #{date.format('LLLL')}
+
+mixin renderField(fieldname,fieldcontent)
+    case fieldname
+        when "issuekey"
+            span #{fieldcontent}
+        when "issuetype"
+            img(src=fieldcontent.iconUrl)
+            +space
+            span #{fieldcontent.name}
+        when "creator"
+        when "assignee"
+            img(src=fieldcontent.avatarUrls['48x48'], width="25px", height="25px")
+            +space
+            span #{fieldcontent.displayName}
+        when "versions"
+        when "fixVersions"
+            each version in fieldcontent
+                span.label.label-version #{version.name}
+        when "priority"
+            img(src=fieldcontent.iconUrl, width="15px", height="15px")
+            +space
+            span #{fieldcontent.name}
+        when "status"
+            case fieldcontent.name
+                when "Closed"
+                    span.label.label-success #{fieldcontent.name}
+                when "Open"
+                    span.label.label-primary #{fieldcontent.name}
+                default
+                    span.label.label-warning #{fieldcontent.name}
+        when "description"
+          if fieldcontent
+            - var text=md(j2md(fieldcontent))
+          else
+            - var text = ""
+          span !{text}
+        when "resolution"
+            if fieldcontent
+                span #{fieldcontent.name}
+        when "timeoriginalestimate"
+            +duration(fieldcontent)
+        when "timeestimate"
+            +duration(fieldcontent)
+        when "created"
+          span 
+            +date(fieldcontent)
+        default
+            span #{fieldcontent}
+

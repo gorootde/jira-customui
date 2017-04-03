@@ -14,29 +14,28 @@
 //-     You should have received a copy of the GNU General Public License
 //-     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-h3 #{data.key}
-h4 #{data.fields['summary']}
-table.table
-  tbody
-    each field in fields
-      tr
-        td #{field.label}
-        - var fieldcontent=data.fields[field.value]
-        case field.value
-          when "issuekey"
-            td #{data.key}
-          when "issuetype"
+include fieldutils
+
+
+div.panel.panel-default
+  div.panel-body
+    h4
+      span #{data.key}
+      +space
+      span.text-muted #{data.fields['summary']}
+    table.table
+      tbody
+        each field in fields
+          tr
+            td #{field.label}
             td
-              img(src=fieldcontent.iconUrl)
-              span #{fieldcontent.name}
-          when "assignee"
-            td 
-              img(src=fieldcontent.avatarUrls['48x48'], width="25px", height="25px")
-              span #{fieldcontent.displayName}
-          when "fixVersions"
-            td
-              each version in fieldcontent
-                span.label.label-primary #{version.name}
-          default
-            td #{fieldcontent}
+              if field.value == "issuekey"
+                +renderField(field.value,data.key)
+              else
+                +renderField(field.value,data.fields[field.value])  
+          
+            
+
+
+        
       

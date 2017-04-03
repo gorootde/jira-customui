@@ -17,7 +17,7 @@
 extends layout
   
   
-  
+include fieldutils
 
 block content
   script(src="/javascripts/filterview.js")
@@ -33,22 +33,11 @@ block content
         tr(data-issue=issue)
           each field in fields
               - var fieldcontent=issue.fields[field.value]
-              case field.value
-                when "issuekey"
-                  td.details-control
-                    a #{issue.key}
-                when "issuetype"
-                  td
-                    img(src=fieldcontent.iconUrl)
-                    span #{fieldcontent.name}
-                when "assignee"
-                  td 
-                    img(src=fieldcontent.avatarUrls['48x48'], width="25px", height="25px")
-                    span #{fieldcontent.displayName}
-                when "fixVersions"
-                  td
-                    each version in fieldcontent
-                      span.label.label-primary #{version.name}
-                default
-                  td #{fieldcontent}
+              if field.value == "issuekey"
+                td.details-control
+                  a
+                    +renderField(field.value,issue.key)
+              else
+                td
+                  +renderField(field.value,fieldcontent)
         

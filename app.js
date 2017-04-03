@@ -34,6 +34,9 @@ var CredentialCache = require('./app/models/credentialcache');
 
 var app = express();
 
+app.locals.md = require('marked').setOptions({ breaks: true });
+app.locals.j2md = require('jira2md').to_markdown;
+app.locals.moment = require('moment');
 
 
 // view engine setup
