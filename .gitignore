@@ -38,3 +38,7 @@ jspm_packages
 amps-standalone-jira-LATEST
 keys
 databasedata
+.baseDir.ts
+js
+**/.baseDir.js
+.tscache

@@ -3,15 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "grunt": "grunt",
     "start": "node ./bin/www",
-    "debug": "DEBUG=* nodemon -e js,pug -i amps-standalone-jira-LATEST app.js",
+    "debug": "grunt watch & DEBUG=* nodemon -e js,pug -i amps-standalone-jira-LATEST js/app.js",
     "jira": "atlas-run-standalone --http-port 8080 --product jira"
   },
   "dependencies": {
+
     "body-parser": "~1.16.0",
     "bootstrap": "~3.3.7",
     "bootstrap-select": "~1.12.2",
-    "cookie-parser": "~1.4.3",
     "cookie-session": "~1.2.0",
     "datatables.net": "~1.10.13",
     "datatables.net-bs": "~1.10.13",
@@ -30,12 +31,24 @@
     "nedb": "~1.8.0",
     "passport": "~0.3.2",
     "passport-atlassian-oauth": "~0.0.2",
+    "path": "^0.12.7",
     "pug": "2.0.0-beta11",
     "request": "~2.81.0",
     "serve-favicon": "~2.3.2"
+
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "@types/express-session": "0.0.32",
+    "@types/passport": "^0.3.3",
+    "tslint": "^4.0.0",
+    "typescript": "^2.2.2",
+    "typings": "^2.1.0",
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-ts": "^6.0.0-beta.15",
+    "grunt-tslint": "^4.0.1"
   },
   "license": "GPL-3.0",
   "author": {
