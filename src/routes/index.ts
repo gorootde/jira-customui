@@ -29,14 +29,14 @@ var debug = Debug("index");
 var router = Express.Router();
 
 router.get("/", function index(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
-            var user = null;
-            if (req.user) {
-                Persistence.CredentialCache.getEntry(req.session.passport.user, function(userProfile: Persistence.User) {
-                    res.render("index", { title: Config.apptitle, user: { name: userProfile.fullName } });
-                });
-            } else {
+    var user = null;
+    if (req.user) {
+        Persistence.CredentialCache.getEntry(req.session.passport.user, function(userProfile: Persistence.User) {
+            res.render("index", { title: Config.apptitle, user: { name: userProfile.fullName } });
+        });
+    } else {
                 res.render("index", { title: Config.apptitle, user: null });
-            }
+    }
 });
 
 export = router;

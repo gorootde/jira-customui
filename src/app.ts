@@ -47,76 +47,10 @@ class Server {
     }
 
     private routes() {
-        //get router
-        let router: express.Router;
-        router = express.Router();
-
-
-        //home page
-        router.get("/", index);
-
-        //use router middleware
-        this.app.use(router);
-    }
-    private config() {
-        this.app.locals.md = marked.setOptions({ breaks: true });
-        this.app.locals.j2md = jira2md.to_markdown;
-        this.app.locals.moment = moment;
-
-
-        this.app.set("views", path.join(__dirname, "../views"));
-        this.app.set("view engine", "pug");
-
-        // uncomment after placing your favicon in /public
-        //this.app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
-        this.app.use(logger("dev"));
-
-
-        this.app.use("/js", express.static(__dirname + "/../node_modules/bootstrap/dist/js")); // redirect bootstrap JS
-        this.app.use("/js", express.static(__dirname + "/../node_modules/jquery/dist")); // redirect JS jQuery
-        this.app.use("/js", express.static(__dirname + "/../node_modules/datatables.net/js"));
-        this.app.use("/js", express.static(__dirname + "/../node_modules/datatables.net-bs/js"));
-        this.app.use("/js", express.static(__dirname + "/../node_modules/datatables.net-colreorder/js"));
-        this.app.use("/js", express.static(__dirname + "/../node_modules/datatables.net-fixedheader/js"));
-
-        this.app.use("/js", express.static(__dirname + "/../node_modules/bootstrap-select/dist/js"));
-        this.app.use("/css", express.static(__dirname + "/../node_modules/bootstrap-select/dist/css"));
-
-        this.app.use("/css", express.static(__dirname + "/../node_modules/datatables.net-bs/css"));
-
-        this.app.use("/css", express.static(__dirname + "/../node_modules/datatables.net-colreorder-bs/css"));
-        this.app.use("/css", express.static(__dirname + "/../node_modules/datatables.net-fixedheader-bs/css"));
-        this.app.use("/css", express.static(__dirname + "/../node_modules/bootstrap/dist/css")); // redirect CSS bootstrap
-        this.app.use("/fonts", express.static(__dirname + "/../node_modules/bootstrap/dist/fonts")); // redirect CSS bootstrap
-    }
-
-
-
-
-    constructor() {
-        this.app = express();
-        this.config();
-        this.routes();
-
-
-        this.app.use(bodyParser.json());
-        this.app.use(bodyParser.urlencoded({
-            extended: false
-        }));
-        this.app.use(cookieParser());
-        this.app.use(express.static(path.join(__dirname, "../public")));
-
-        debug("Session Init!");
-        this.app.use(session({
-            secret: "foobar"
-        }));
-
-        debug("Passport Init!");
-        this.app.use(passport.initialize());
-        this.app.use(passport.session()); // persistent login sessions
-
+        this.app.use("/", index);
         this.app.use("/auth", login);
         this.app.use("/api/jira", jira);
+
 
         // catch 404 and forward to error handler
         this.app.use(function(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -137,10 +71,77 @@ class Server {
                 error: err
             });
         });
+    }
+
+    private configLibPaths() {
+
+        this.app.use("/js", express.static(__dirname + "/../node_modules/bootstrap/dist/js")); // redirect bootstrap JS
+        this.app.use("/js", express.static(__dirname + "/../node_modules/jquery/dist")); // redirect JS jQuery
+        this.app.use("/js", express.static(__dirname + "/../node_modules/datatables.net/js"));
+        this.app.use("/js", express.static(__dirname + "/../node_modules/datatables.net-bs/js"));
+        this.app.use("/js", express.static(__dirname + "/../node_modules/datatables.net-colreorder/js"));
+        this.app.use("/js", express.static(__dirname + "/../node_modules/datatables.net-fixedheader/js"));
+
+        this.app.use("/js", express.static(__dirname + "/../node_modules/bootstrap-select/dist/js"));
+        this.app.use("/css", express.static(__dirname + "/../node_modules/bootstrap-select/dist/css"));
+
+        this.app.use("/css", express.static(__dirname + "/../node_modules/datatables.net-bs/css"));
+
+        this.app.use("/css", express.static(__dirname + "/../node_modules/datatables.net-colreorder-bs/css"));
+        this.app.use("/css", express.static(__dirname + "/../node_modules/datatables.net-fixedheader-bs/css"));
+        this.app.use("/css", express.static(__dirname + "/../node_modules/bootstrap/dist/css")); // redirect CSS bootstrap
+        this.app.use("/fonts", express.static(__dirname + "/../node_modules/bootstrap/dist/fonts")); // redirect CSS bootstrap
+
+
+
+    }
+
+    private config() {
+        this.app.locals.md = marked.setOptions({ breaks: true });
+        this.app.locals.j2md = jira2md.to_markdown;
+        this.app.locals.moment = moment;
+
+        this.app.set("views", path.join(__dirname, "../views"));
+        this.app.set("view engine", "pug");
+
+        // uncomment after placing your favicon in /public
+        //this.app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
+        this.app.use(logger("dev"));
+
+        this.configLibPaths();
+
+        this.app.use(bodyParser.json());
+        this.app.use(bodyParser.urlencoded({
+            extended: false
+        }));
+        this.app.use(cookieParser());
+        this.app.use(express.static(path.join(__dirname, "../public")));
+
+        this.app.use(session({
+            secret: "foobar"
+        }));
+
+        this.app.use(passport.initialize());
+        this.app.use(passport.session()); // persistent login sessions
+
+
+
+    }
+
+
+
+
+    constructor() {
+        this.app = express();
+        this.config();
+        this.routes();
+
+
 
         this.app.listen(3000, function() {
             console.log("Listening on port 3000");
         });
+
     }
 }
 
