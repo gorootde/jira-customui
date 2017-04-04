@@ -49,9 +49,9 @@ html
             a.navbar-brand(href="/") #{title}
           .collapse.navbar-collapse
             if user
-              include menuloggedin
-            include loginform
+              include partitials/menuloggedin
+            include partitials/loginform
       
     div.content
       block content
-      include footer
+      include partitials/footer
