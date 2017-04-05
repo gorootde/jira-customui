@@ -18,7 +18,6 @@
 
 
 import * as Express from "express";
-var router = Express.Router();
 import * as Config from "../app/config";
 import * as Request from "request";
 import * as Debug from "debug";
@@ -27,78 +26,101 @@ import * as JIRATools from "../app/jiratools";
 
 
 
-
-
-function ensureAuthenticated(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
-    if (req.isAuthenticated()) {
-        return next();
+class JIRARoute {
+    public static ensureAuthenticated(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
+        if (req.isAuthenticated()) {
+            return next();
+        }
+        res.redirect("/login");
     }
-    res.redirect("/login");
-}
 
-router.get("/filter/favourite", ensureAuthenticated, function(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
-    var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
-    jira.getAllowedFilters(function(filters: Array<JIRATools.Filter>) {
-        res.setHeader("Content-Type", "application/json");
-        res.send(filters);
-    });
-});
+    public static getFavouriteFilters(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
+        var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
+        jira.getAllowedFilters(function(filters: Array<JIRATools.Filter>) {
 
-function getIssue(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
-    var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
-    jira.getFilter(req.params.filterid, function(filter: JIRATools.Filter) {
-        if (filter) {
-            filter.getIssue(req.params.issuekey, function(fields: Array<JIRATools.Column>, issue: any) {
-                if (issue) {
-                    res.render("issuedetails", {
-                        title: Config.apptitle,
-                        user: req.user,
-                        data: issue,
-                        fields: fields
-                    });
-                }
-            });
-        }
-    });
-}
+            var filtermapper = function(currentVal: JIRATools.Filter, index: number, array: Array<JIRATools.Filter>) {
+                return { id: currentVal.id, name: currentVal.name };
+            };
+            res.setHeader("Content-Type", "application/json");
 
-router.get("/filterresults/:filterid/issue/:issuekey", ensureAuthenticated, getIssue);
-
-router.get("/filterresults/:filterid", ensureAuthenticated, function(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
-    var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
-    jira.getFilter(req.params.filterid, function(filter: JIRATools.Filter) {
-        if (filter) {
-            filter.getResult(1000, function(fields: Array<JIRATools.Column>, data: any) {
-                if (req.accepts("html")) {
-                    res.render("filterview", {
-                        title: Config.apptitle,
-                        user: req.user,
-                        filter: filter,
-                        fields: fields,
-                        data: data
-                    });
-                }
-            });
-
-
-
-        } else {
-            res.status(404).send("Filter not found or not allowed current user");
-        }
-    });
-});
-
-
-router.get("/issue", ensureAuthenticated, function(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
-    var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
-    jira.getCreateMetaData(function(data: any) {
-        res.render("createissue", {
-            title: Config.apptitle,
-            user: req.user,
-            data: data
+            res.send(filters.map<any>(filtermapper));
         });
-    });
+    };
+    public static getIssue(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
+        var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
+        jira.getFilter(req.params.filterid, function(filter: JIRATools.Filter) {
+            if (filter) {
+                filter.getIssue(req.params.issuekey, function(fields: Array<JIRATools.Column>, issue: any) {
+                    if (issue) {
+                        res.render("issuedetails", {
+                            title: Config.apptitle,
+                            user: req.user,
+                            data: issue,
+                            fields: fields
+                        });
+                    }
+                });
+            }
+        });
+    }
 
-});
+    public static getFilterResults(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
+        var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
+        jira.getFilter(req.params.filterid, function(filter: JIRATools.Filter) {
+            if (filter) {
+                filter.getResult(1000, function(fields: Array<JIRATools.Column>, data: any) {
+                    if (req.accepts("html")) {
+                        res.render("filterview", {
+                            title: Config.apptitle,
+                            user: req.user,
+                            filter: filter,
+                            fields: fields,
+                            data: data
+                        });
+                    }
+                });
+
+
+
+            } else {
+                res.status(404).send("Filter not found or not allowed current user");
+            }
+        });
+    }
+
+    public static createIssue(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
+        var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
+        jira.getCreateMetaData(function(data: any) {
+            res.render("createissue", {
+                title: Config.apptitle,
+                user: req.user,
+                data: data
+            });
+        });
+
+    }
+
+    public static createIssueFields(req: Express.Request, res: Express.Response, next: Express.NextFunction) {
+        var jira = new JIRATools.JIRA(Config.jira.baseurl, req.user);
+        jira.getCreateMetaData(function(data: any) {
+
+            res.render("partitials/createissue_fields", {
+                title: Config.apptitle,
+                user: req.user,
+                data: data[0].issuetypes[0]
+            });
+        }, req.params.projectid, req.params.issuetypeid);
+
+    }
+
+}
+
+var router = Express.Router();
+router.get("/filter/favourite", JIRARoute.ensureAuthenticated, JIRARoute.getFavouriteFilters);
+router.get("/filterresults/:filterid/issue/:issuekey", JIRARoute.ensureAuthenticated, JIRARoute.getIssue);
+router.get("/filterresults/:filterid", JIRARoute.ensureAuthenticated, JIRARoute.getFilterResults);
+router.get("/issue", JIRARoute.ensureAuthenticated, JIRARoute.createIssue);
+router.get("/issue/:projectid/:issuetypeid", JIRARoute.ensureAuthenticated, JIRARoute.createIssueFields);
+
 
 export = router;

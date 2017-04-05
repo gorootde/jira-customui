@@ -15,24 +15,32 @@
 //     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-function refreshIssueTypes(projectKey){
+function refreshIssueTypes(projectKey) {
 
-  $('.issuetype').attr('disabled','disabled');
-  $('.issuetype[data-projectkey="'+projectKey+'"]').attr('disabled',null);
-  $('#selissuetype').selectpicker('refresh');
+    $('.issuetype').attr('disabled', 'disabled');
+    $('.issuetype[data-projectkey="' + projectKey + '"]').attr('disabled', null);
+    $('#selissuetype').selectpicker('refresh');
 }
 
-$(document).ready(function(){
-  $('.selectpicker').selectpicker({
-    style: 'btn-info',
-    size: 8
-  });
+$(document).ready(function() {
+    $('.selectpicker').selectpicker({
+        style: 'btn-info',
+        size: 8
+    });
 
-  refreshIssueTypes($('#selproject').val());
+    refreshIssueTypes($('#selproject').val());
 
-  $('#selproject').change(function(){
-      var projectKey=$(this).val();
-      refreshIssueTypes(projectKey);
-  });
+    $('#selproject').change(function() {
+        var projectKey = $(this).val();
+        refreshIssueTypes(projectKey);
+    });
+
+    $('#selissuetype').change(function() {
+        var projectKey = $('#selproject').val();
+        var issueTypeId = $('#selissuetype').val();
+        var detailsurl = window.location.pathname + "/" + projectKey + "/" + issueTypeId;
+        $.get(detailsurl).done(function(details) {
+            $('#issuefields').html(details);
+        });
+    });
 });
-

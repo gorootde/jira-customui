@@ -34,6 +34,6 @@ block content
         optgroup(label=project.key)
         for issuetype in project.issuetypes
           option.issuetype(disabled,value=issuetype.id,data-projectkey=project.key,data-content="<img src=\""+issuetype.iconUrl+"\" width=\"16\" height=\"16\"/> "+issuetype.name) #{issuetype.name}
-      
+    div#issuefields  
 
 

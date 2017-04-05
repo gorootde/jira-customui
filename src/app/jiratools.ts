@@ -26,6 +26,7 @@ var debug = Debug("jiratools");
 module JIRATools {
 
     export class JIRA {
+        private self = this;
         private token: string;
         private tokenSecret: string;
         private baseurl: string;
@@ -54,12 +55,16 @@ module JIRATools {
             Request.get(jirareq, callback);
         }
 
-        public getCreateMetaData(callback: (projects: any) => void) {
+        public getCreateMetaData(callback: (projects: any) => void, projectKey?: string, issuetypeid?: number) {
             var reqobj = {
                 qs: {
-                    expand: "project.issuetypes.fields"
+                    expand: "projects.issuetypes.fields",
+                    projectKeys: projectKey,
+                    issuetypeIds: issuetypeid
                 }
             };
+
+
             this.performJiraCall("/rest/api/2/issue/createmeta", function(error: any, response: Request.RequestResponse, body: any) {
                 var parsedBody = JSON.parse(body);
                 callback(parsedBody.projects);
@@ -76,13 +81,13 @@ module JIRATools {
         }
 
         public getAllowedFilters(callback: (filters: Array<Filter>) => void) {
+            var self = this;
             this.performJiraCall("/rest/api/2/filter/favourite", function(error: any, response: Request.RequestResponse, body: any) {
-                debug("statuuus %o", error);
                 var parsedBody = JSON.parse(body);
                 var filters = [];
                 for (let index = 0; index < parsedBody.length; index++) {
                     var filter = parsedBody[index];
-                    filters.push(new Filter(this, filter.id, filter.name, filter.jql));
+                    filters.push(new Filter(self, filter.id, filter.name, filter.jql));
                 }
                 callback(filters);
             });
@@ -97,14 +102,20 @@ module JIRATools {
     export class Filter {
         private jira: JIRA;
         private _id: number;
-        private name: string;
-        private jql: string;
+        private _name: string;
+        private _jql: string;
 
         constructor(jira: JIRA, id: number, name: string, jql: string) {
             this.jira = jira;
             this._id = id;
-            this.name = name;
-            this.jql = jql;
+            this._name = name;
+            this._jql = jql;
+        }
+        get jql() {
+            return this._jql;
+        }
+        get name() {
+            return this._name;
         }
         get id() {
             return this._id;
@@ -122,6 +133,7 @@ module JIRATools {
         }
 
         public performSearch(maxResults: number, jqlPrefix: string, callback: (columns: Array<Column>, body: any) => void) {
+            var self = this;
             this.getColumns(function(columns: Array<Column>) {
                 var fieldlist = columns.map(function(col: Column) {
                     return col.value;
@@ -129,12 +141,12 @@ module JIRATools {
 
                 var reqobj = {
                     qs: {
-                        jql: (jqlPrefix ? jqlPrefix : "") + this.jql,
+                        jql: (jqlPrefix ? jqlPrefix : "") + self.jql,
                         maxResults: maxResults,
                         fields: fieldlist
                     }
                 };
-                this.jira.performJiraCall("/rest/api/2/search", function(error: any, response: Request.RequestResponse, body: any) {
+                self.jira.performJiraCall("/rest/api/2/search", function(error: any, response: Request.RequestResponse, body: any) {
                     callback(columns, JSON.parse(body));
                 }, reqobj);
             });

@@ -41,7 +41,7 @@ mixin date(date)
   - var date=moment(date,"YYYY-MM-DDTHH:mm:ss.SSSZZ")
   span #{date.format('LLLL')}
 
-mixin renderField(fieldname,fieldcontent)
+mixin renderField(fieldname,fieldcontent,editable)
     case fieldname
         when "issuekey"
             span #{fieldcontent}
@@ -71,11 +71,17 @@ mixin renderField(fieldname,fieldcontent)
                 default
                     span.label.label-warning #{fieldcontent.name}
         when "description"
+          
           if fieldcontent
             - var text=md(j2md(fieldcontent))
           else
             - var text = ""
-          span !{text}
+          if editable
+            textarea.form-control(rows=5)
+          else
+            span !{text}
+        
+          
         when "resolution"
             if fieldcontent
                 span #{fieldcontent.name}
