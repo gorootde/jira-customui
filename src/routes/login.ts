@@ -22,6 +22,7 @@ import * as AtlassianOAuthStrategy from "passport-atlassian-oauth";
 import * as Persistence from "../app/models/persistence";
 import * as Config from "../app/config";
 import * as Debug from "debug";
+import * as JIRATools from "../app/jiratools";
 
 var debug = Debug("login");
 var router = Express.Router();
@@ -52,7 +53,7 @@ Passport.use(new AtlassianOAuthStrategy.Strategy({
     consumerKey: Config.consumerKey,
     consumerSecret: Config.consumerSecret
 },
-    function(token: string, tokenSecret: string, profile: JIRARest.User, done: (err: any, id: Persistence.User) => void) {
+    function(token: string, tokenSecret: string, profile: any, done: (err: any, id: Persistence.User) => void) {
 
         var user = new Persistence.User(profile.id, profile.username, profile.displayName, profile.emailAddress, token, tokenSecret);
         Persistence.CredentialCache.addOrUpdateEntry(user);

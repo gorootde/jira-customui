@@ -5,15 +5,9 @@ module.exports = function(grunt) {
         ts: {
             app: {
                 files: [{
-                    "js": ["src/**/*.ts","!src/.baseDir.ts", "!src/_all.d.ts"]
+                    js: ["src/**/*.ts","!src/.baseDir.ts", "!src/_all.d.ts"]
                 }],
-                options: {
-                    allowJs: true,
-                    module: "commonjs",
-                    noLib: false,
-                    target: "es6",
-                    sourceMap: false
-                }
+                tsconfig:true
             }
         },
         tslint: {

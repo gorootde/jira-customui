@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "allowJs": false,
+      "module": "commonjs",
+      "noLib": false,
+      "target": "es6",
+      "sourceMap": false
+    }
+
+}
