@@ -15,8 +15,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/// <reference types="cookie-session" />
-/// <reference types="passport" />
 
 "use strict";
 
