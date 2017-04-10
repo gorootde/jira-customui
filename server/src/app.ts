@@ -75,22 +75,22 @@ class Server {
 
     private configLibPaths() {
 
-        this.app.use("/js", express.static(__dirname + "/../node_modules/bootstrap/dist/js")); // redirect bootstrap JS
-        this.app.use("/js", express.static(__dirname + "/../node_modules/jquery/dist")); // redirect JS jQuery
-        this.app.use("/js", express.static(__dirname + "/../node_modules/datatables.net/js"));
-        this.app.use("/js", express.static(__dirname + "/../node_modules/datatables.net-bs/js"));
-        this.app.use("/js", express.static(__dirname + "/../node_modules/datatables.net-colreorder/js"));
-        this.app.use("/js", express.static(__dirname + "/../node_modules/datatables.net-fixedheader/js"));
+        this.app.use("/js", express.static(__dirname + "/../../node_modules/bootstrap/dist/js")); // redirect bootstrap JS
+        this.app.use("/js", express.static(__dirname + "/../../node_modules/jquery/dist")); // redirect JS jQuery
+        this.app.use("/js", express.static(__dirname + "/../../node_modules/datatables.net/js"));
+        this.app.use("/js", express.static(__dirname + "/../../node_modules/datatables.net-bs/js"));
+        this.app.use("/js", express.static(__dirname + "/../../node_modules/datatables.net-colreorder/js"));
+        this.app.use("/js", express.static(__dirname + "/../../node_modules/datatables.net-fixedheader/js"));
 
-        this.app.use("/js", express.static(__dirname + "/../node_modules/bootstrap-select/dist/js"));
-        this.app.use("/css", express.static(__dirname + "/../node_modules/bootstrap-select/dist/css"));
+        this.app.use("/js", express.static(__dirname + "/../../node_modules/bootstrap-select/dist/js"));
+        this.app.use("/css", express.static(__dirname + "/../../node_modules/bootstrap-select/dist/css"));
 
-        this.app.use("/css", express.static(__dirname + "/../node_modules/datatables.net-bs/css"));
+        this.app.use("/css", express.static(__dirname + "/../../node_modules/datatables.net-bs/css"));
 
-        this.app.use("/css", express.static(__dirname + "/../node_modules/datatables.net-colreorder-bs/css"));
-        this.app.use("/css", express.static(__dirname + "/../node_modules/datatables.net-fixedheader-bs/css"));
-        this.app.use("/css", express.static(__dirname + "/../node_modules/bootstrap/dist/css")); // redirect CSS bootstrap
-        this.app.use("/fonts", express.static(__dirname + "/../node_modules/bootstrap/dist/fonts")); // redirect CSS bootstrap
+        this.app.use("/css", express.static(__dirname + "/../../node_modules/datatables.net-colreorder-bs/css"));
+        this.app.use("/css", express.static(__dirname + "/../../node_modules/datatables.net-fixedheader-bs/css"));
+        this.app.use("/css", express.static(__dirname + "/../../node_modules/bootstrap/dist/css")); // redirect CSS bootstrap
+        this.app.use("/fonts", express.static(__dirname + "/../../node_modules/bootstrap/dist/fonts")); // redirect CSS bootstrap
 
 
 
@@ -115,7 +115,7 @@ class Server {
             extended: false
         }));
         this.app.use(cookieParser());
-        this.app.use(express.static(path.join(__dirname, "../public")));
+        this.app.use(express.static(path.join(__dirname, "../../public")));
 
         this.app.use(session({
             secret: "foobar"

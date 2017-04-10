@@ -5,7 +5,7 @@
   "scripts": {
     "grunt": "grunt",
     "start": "node ./bin/www",
-    "debug": "grunt watch & DEBUG=* nodemon -e js,pug -i amps-standalone-jira-LATEST js/app.js",
+    "debug": "grunt watch & DEBUG=* nodemon -e js,pug -i amps-standalone-jira-LATEST server/runtime/app.js",
     "jira": "atlas-run-standalone --http-port 8080 --product jira"
   },
   "dependencies": {
@@ -42,6 +42,7 @@
     "path": "^0.12.7",
     "pug": "2.0.0-beta11",
     "request": "~2.81.0",
+    "rxjs": "^5.3.0",
     "serve-favicon": "~2.3.2"
   },
   "devDependencies": {
@@ -51,6 +52,7 @@
     "@types/passport": "^0.3.3",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
+    "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-ts": "^6.0.0-beta.15",
     "grunt-tslint": "^4.0.1",

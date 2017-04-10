@@ -15,15 +15,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-
 import * as fs from "fs";
 
 
 var config = {
     apptitle: "JIRACU",
     oauthcallbackurl: "http://localhost:3000/auth/atlassian-oauth/callback",
-    consumerSecret: fs.readFileSync("keys/oauth.pem").toString(),
+    consumerSecret: fs.readFileSync(__dirname +  "/../../keys/oauth.pem").toString(),
     consumerKey: "mysecretkey",
     signatureMethod: "RSA-SHA1",
     jira: {

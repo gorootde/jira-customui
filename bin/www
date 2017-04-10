@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../js/app');
+var app = require('../server/runtime/app');
 var debug = require('debug')('jira-customer-ui:server');
 var http = require('http');
 
