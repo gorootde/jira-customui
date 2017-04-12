@@ -5,7 +5,7 @@ var tslint = require('gulp-tslint');
 var merge = require('merge-stream');
 var browserSync = require('browser-sync').create();
 var nodemon = require('gulp-nodemon');
-
+var watch = require('gulp-watch');
 var tsprojectServer = ts.createProject("./tsconfig.json");
 var tsprojectClient = ts.createProject("./tsconfig.json");
 
@@ -26,10 +26,12 @@ gulp.task('nodemon', function(cb) {
     var started = false;
     return nodemon({
         script: 'server/runtime/app.js',
+        ext:"js ts html",
         execMap: {
             js: 'DEBUG=* node'
         }
-    }).on('start', function() {
+    }).on('restart',["build"])
+    .on('start', function() {
         if (!started) {
             cb();
             started = true;

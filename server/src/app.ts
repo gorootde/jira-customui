@@ -47,7 +47,7 @@ class Server {
 
     private routes() {
         // this.app.use("/", index);
-        // this.app.use("/auth", login);
+        this.app.use("/api/auth", login);
         // this.app.use("/api/jira", jira);
 
 
