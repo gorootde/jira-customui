@@ -44,3 +44,4 @@ js
 .tscache
 server/runtime
 client/runtime
+config.ts
