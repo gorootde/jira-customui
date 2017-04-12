@@ -66,9 +66,7 @@ class Server {
             // render the error page
             res.status(err.status || 500);
             console.log(err);
-            res.render("error", {
-                error: err
-            });
+            res.send(err);
         });
     }
 
@@ -101,8 +99,6 @@ class Server {
         this.app.locals.j2md = jira2md.to_markdown;
         this.app.locals.moment = moment;
 
-        this.app.set("views", path.join(__dirname, "../views"));
-        this.app.set("view engine", "pug");
 
         // uncomment after placing your favicon in /public
         //this.app.use(favicon(path.join(__dirname, "public", "favicon.ico")));

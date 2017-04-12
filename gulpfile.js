@@ -16,7 +16,7 @@ gulp.task('default', ['browser-sync'], function() {});
 gulp.task('browser-sync', ['nodemon'], function() {
     browserSync.init({
         proxy: "localhost:3000",
-        files: ["client/src/**/*.*","server/src/**/*.*"],
+        files: ["client/src/**/*.*", "server/src/**/*.*"],
         brower: "Safari",
         port: 7000
     });
@@ -25,7 +25,10 @@ gulp.task('browser-sync', ['nodemon'], function() {
 gulp.task('nodemon', function(cb) {
     var started = false;
     return nodemon({
-        script: 'server/runtime/app.js'
+        script: 'server/runtime/app.js',
+        execMap: {
+            js: 'DEBUG=* node'
+        }
     }).on('start', function() {
         if (!started) {
             cb();
